@@ -109,5 +109,6 @@ site.pp:
     * Boolean to indicate if the installed java version is linked as the default java, javac etc...
 *  ensure
     * Boolean to disable anything from happening (absent/removal not supported yet)
-
+*  installjre
+    * Boolean to install Server JRE instead of full JDK (defaultis false)
 

@@ -38,6 +38,10 @@
 #   String.  Specifies if jdk should be installed or absent
 #   Defaults to <tt>installed</tt>.
 #
+# [* installjre *]
+#   Boolean. Specifies if the Server JRE version is installed, instead of the full JDK.
+#   Defaults to false
+#
 class jdk_oracle(
   $version        = hiera('jdk_oracle::version',        '8' ),
   $version_update = hiera('jdk_oracle::version_update', 'default' ),
@@ -47,11 +51,12 @@ class jdk_oracle(
   $cache_source   = 'puppet:///modules/jdk_oracle/',
   $platform       = hiera('jdk_oracle::platform',       'x64' ),
   $default_java   = hiera('jdk_oracle::default_java',   true ),
-  $ensure         = 'installed'
+  $ensure         = 'installed',
+  $installjre     = hiera('jdk_oracle::installjre',     false ),
   ) {
 
-  $default_8_update = '11'
-  $default_8_build  = '12'
+  $default_8_update = '45'
+  $default_8_build  = '14'
   $default_7_update = '67'
   $default_7_build  = '01'
   $default_6_update = '45'
@@ -113,6 +118,11 @@ class jdk_oracle(
       default: {
         fail("Unsupported version: ${version}.  Implement me?")
       }
+    }
+
+    if ($installjre) {
+      $javaDownloadURI = "http://download.oracle.com/otn-pub/java/jdk/${version}u${version_u}-b${version_b}/server-jre-${version}u${version_u}-linux-${plat_filename}.tar.gz"
+      $java_home = "${install_dir}/jre1.${version}.0_${version_u}"
     }
 
     if ! defined(File[$install_dir]) {
